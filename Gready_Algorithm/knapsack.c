@@ -1,7 +1,4 @@
 
-/*there aere N objects and knapSack(bag).object i has weight Wi and knapsack
-has capacity m i
-*/
 #include<stdio.h>
 struct ratio
 {
@@ -11,17 +8,28 @@ struct ratio
 void mergeSort(struct ratio oi[],int lowerbound,int upperbound);
 void printArray(struct ratio oi[] , int size);
 void merge(struct ratio oi[],int lowerbound,int mid,int upperbound);
+void knapsack(int objectSize,int bagCapacity,int profit[],int weight[]);
 
 int main()
 {
+    int objectSize,bagCapacity, profit[20], weight[20];
     struct ratio o1[20];
-    printf("Enter the value for sorting ");
-    for(int i=0;i<6;i++){
-        scanf("%d",&o1[i].val);
-        o1[i].index=i;
+    printf("Enter the value for object size :  ");
+    scanf("%d",&objectSize);
+    printf("\nEnter the value for bagcapacity(knapSack) : ");
+    scanf("%d",&bagCapacity);
+    printf("\n Enter the values of profit : ");
+    for(int i=0;i<objectSize;i++){
+        scanf("%d",&profit[i]);
     }
-    mergeSort(o1,0,5);
-    printArray(o1,6);
+    printf("\n Enter the values of weight : ");
+    for(int i=0;i<objectSize;i++){
+        scanf("%d",&weight[i]);
+    }   
+    knapsack(objectSize,bagCapacity,profit,weight);
+    printf("\n");
+
+    
     return 0;
 }
 void mergeSort(struct ratio oi[],int lowerbound,int upperbound)
@@ -71,9 +79,10 @@ void merge(struct ratio oi[],int lowerbound,int mid,int upperbound)
 }
 void printArray(struct ratio oi[],int size)
 {
+    printf("\nprinting value ");
     for(int i=0;i<size;i++)
     {
-        printf("%d ",oi[i].val);
+        printf("%.2f ",oi[i].val);
     }
     printf("\n Printing index ");
     for(int i=0;i<size;i++)
@@ -83,19 +92,19 @@ void printArray(struct ratio oi[],int size)
 }
 
 //KnapSack Function
-int knapsack(int objectSize,int bagCapacity,int profit[],int weight[])
+void knapsack(int objectSize,int bagCapacity,int profit[],int weight[])
 {
-   struct ratio x[20];
-   float totalProfit=0.0;
+    struct ratio x[20];
+    float totalProfit=0.0;
     //calculating ratio Pi/Wi and storing it in x[i];
     for(int i=0;i<objectSize;i++)
     {
-        x[i].val=profit[i]/weight[i];
+        x[i].val=(float)profit[i]/weight[i];
         x[i].index=i;
 
     }
     //sorting the ratio with help of merge Sort  in descending order
-    mergeSort(x,0,bagCapacity-1);
+    mergeSort(x,0,objectSize-1);
     
     //Logic Part 
     int i=0;
@@ -103,12 +112,22 @@ int knapsack(int objectSize,int bagCapacity,int profit[],int weight[])
     {
         if(bagCapacity>weight[x[i].index])
         {
-            totalProfit +=(profit[x[i].index]*1);
-            bagCapacity -=weight[x[i].index];
-            printf("\nTotal profit %f " ,totalProfit);
             
+            bagCapacity -=weight[x[i].index];
+            totalProfit +=(profit[x[i].index]*1);
 
-        }
-    }
+            printf("\nthe fraction Value  is 1.0");
     
+        }
+        else
+        break;
+        i++;
+    }
+    float temp1=(float)bagCapacity;
+    float temp2=(float)weight[x[i].index]; 
+    double value=(float) (temp1/temp2);
+    printf("the frcation value is %.2f ",value);
+    totalProfit +=(float)(profit[x[i].index]*value);
+     printf("\nTotal profit %.2f " ,totalProfit);
+     printArray(x,objectSize);
 }
